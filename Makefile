@@ -4,6 +4,9 @@ export PGDATABASE := $(DB)
 
 demo: synthetic refresh
 
+test:
+	python -m pytest tests -q
+
 synthetic:
 	python scripts/gen_synthetic.py raw_private
 

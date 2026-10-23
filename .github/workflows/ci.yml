@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.10", cache: pip}
       - run: pip install -r requirements.txt
+      - name: Unit tests (pytest)
+        run: python -m pytest tests -q
       - name: Invent data, load it, build, test
         run: |
           python scripts/gen_synthetic.py raw_private
