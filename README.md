@@ -6,11 +6,7 @@ A small-business data warehouse rebuilt from three messy Excel workbooks (18 she
 tenancies, rent collection, utility and water bills, inspections, parking and moving jobs.
 **All data in this repository is invented.** The original project ran on a real agency's data, which never leaves the owner's computer.
 
-```
-Excel (18 sheets)  ->  bronze (everything as text)  ->  silver (cleaned views + rule seeds)  ->  gold (dim_ / fact_ / rpt_)
-Direct entry (Navicat/psql) -> entry schema -----^                                              |
-                                                                         problem list (Excel), dashboard, run history
-```
+![Architecture: Excel and direct entry load into PostgreSQL bronze, silver and gold layers tested by dbt; gold tables are published to Snowflake RAW, STAGING and MARTS; GitHub Actions runs everything on each push](docs/img/architecture.svg)
 
 ## Run it in one command
 
@@ -67,6 +63,10 @@ cd dbt_snowflake && dbt build --target snowflake
 
 Login uses a key pair (a service user with a public key), so there is no password in any file. Settings come from environment variables (`dbt/profiles.yml`, target `snowflake`).
 `scripts/s3_landing.py` uploads and downloads the CSV files to an S3 bucket (server-side encrypted); it is not part of the Snowflake path yet.
+
+What the reports built in Snowflake look like (invented data, excerpt):
+
+![Excerpt of the water-bill summary and follow-up reports built by dbt in Snowflake](docs/img/water_followup_sample.png)
 
 | Part | How it was checked |
 |---|---|
