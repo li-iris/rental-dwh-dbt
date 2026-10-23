@@ -14,6 +14,9 @@ refresh:
 	createdb $(DB) 2>/dev/null || true
 	SKIP_BACKUP=1 bash scripts/run_all.sh
 
+s3-upload:
+	python scripts/s3_landing.py upload raw_private/bronze_csv
+
 dashboard:
 	python scripts/build_dashboard.py docs_site/dashboard.html
 
