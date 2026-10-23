@@ -1,5 +1,7 @@
 # Rental Data Warehouse (dbt + PostgreSQL)
 
+[Live data docs](https://li-iris.github.io/rental-dwh-dbt/) · [Dashboard](https://li-iris.github.io/rental-dwh-dbt/dashboard.html) · CI runs on every push (synthetic data)
+
 A small-business data warehouse rebuilt from three messy Excel workbooks (18 sheets) used by a rental agency to run
 tenancies, rent collection, utility and water bills, inspections, parking and moving jobs.
 **All data in this repository is invented.** The original project ran on a real agency's data, which never leaves the owner's computer.
