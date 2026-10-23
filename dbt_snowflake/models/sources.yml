@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Gold tables of the local PostgreSQL warehouse, loaded by scripts/snowflake_load.py (synthetic demo data)."
+    schema: RAW
+    tables:
+      - name: dim_property
+      - name: dim_report_date
+      - name: fact_water_bill
+      - name: fact_parking_lease

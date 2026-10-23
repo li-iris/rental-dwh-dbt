@@ -1,0 +1,19 @@
+# Cloud layer: reads the finished gold tables that scripts/export_gold.py + scripts/snowflake_load.py put into
+# Snowflake (schema RAW) and builds small reports on top, with data tests.
+# Run:  source ~/.snowflake/env.sh && cd dbt_snowflake && dbt build --target snowflake
+name: rental_dwh_snowflake
+version: "1.0"
+profile: rental_dwh
+
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+
+models:
+  rental_dwh_snowflake:
+    staging:
+      +materialized: view
+      +schema: STAGING
+    marts:
+      +materialized: table
+      +schema: MARTS

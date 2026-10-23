@@ -13,3 +13,5 @@ sql/*_zh.sql
 *.dump
 docs_site/
 .venv/
+dbt_snowflake/target/
+dbt_snowflake/logs/

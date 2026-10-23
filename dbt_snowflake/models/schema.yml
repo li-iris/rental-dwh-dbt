@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_property
+    columns:
+      - name: property_id
+        data_tests: [unique, not_null]
+
+  - name: stg_water_bill
+    columns:
+      - name: water_bill_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_property')
+                field: property_id
+      - name: follow_up_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['closed', 'company_not_paid_yet', 'invoice_overdue', 'invoice_due_soon',
+                         'payment_date_unknown', 'payment_overdue', 'awaiting_payment']
+
+  - name: stg_parking_lease
+    columns:
+      - name: parking_lease_id
+        data_tests: [unique, not_null]
+      - name: contract_status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['expired', 'no_tenant_info', 'expired_by_date', 'active', 'other']
+
+  - name: rpt_water_followup
+    description: "Open water bills only."
+  - name: rpt_water_status_summary
+    description: "One row per follow-up status."
+  - name: rpt_parking_contracts
+    description: "One row per parking / garage contract."

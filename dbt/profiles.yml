@@ -1,4 +1,5 @@
-# Connection settings for dbt. Values come from environment variables so no password is stored in git.
+# Connection settings for dbt. Values come from environment variables so no password or key is stored in git.
+# dev = local PostgreSQL (default). snowflake = the cloud version:  dbt run --target snowflake  (needs the dbt-snowflake package).
 rental_dwh:
   target: dev
   outputs:
@@ -10,4 +11,14 @@ rental_dwh:
       password: "{{ env_var('PGPASSWORD', '') }}"
       dbname: "{{ env_var('PGDATABASE', 'rental_dwh') }}"
       schema: public
+      threads: 4
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', '') }}"
+      user: "{{ env_var('SNOWFLAKE_USER', '') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'DBT_ROLE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'RENTAL_WH') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'RENTAL_DWH') }}"
+      schema: "{{ env_var('SNOWFLAKE_SCHEMA', 'public') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH', '') }}"
       threads: 4
