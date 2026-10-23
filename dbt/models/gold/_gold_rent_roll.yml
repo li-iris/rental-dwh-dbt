@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: fact_rent_roll_month
+    description: "Property x month: expected rent from the tenancy list (only where it is unambiguous) next to the money recorded in the workbooks."
+    columns:
+      - name: property_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+      - name: month_start
+        data_tests: [not_null]
+      - name: rent_basis
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['unit_rent', 'room_rent', 'room_rents_estimated', 'rent_type_changed_in_month', 'unclear', 'no_tenancy']
+
+  - name: fact_turnover_tenancy_candidate
+    description: "Tenancies that could belong to a room turnover case, matched by property and dates. is_only_candidate marks a safe link."
+    columns:
+      - name: case_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fact_turnover_case')
+                field: case_id
+      - name: tenancy_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_tenancy')
+                field: tenancy_id
+      - name: role
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['leaving', 'arriving']

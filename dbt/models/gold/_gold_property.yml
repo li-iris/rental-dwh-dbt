@@ -1,0 +1,87 @@
+version: 2
+
+models:
+  - name: dim_property_profile
+    description: "Descriptive facts of a property: rents, contract tenants, agent, manager, bond, facilities."
+    columns:
+      - name: property_id
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: dim_room_profile
+    description: "One row per living space of a property with orientation, furniture, balcony and wardrobe."
+    columns:
+      - name: room_profile_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: dim_property_item
+    description: "Items the company bought for a property (newest workbook version kept)."
+    columns:
+      - name: property_item_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+      - name: condition
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['new', 'almost_new', 'used']
+      - name: installed_date_precision
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['year', 'month', 'day']
+
+  - name: fact_parking_lease
+    description: "Parking spaces and garages with contract status (newest workbook version kept)."
+    columns:
+      - name: parking_lease_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+      - name: lease_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['expired', 'dated', 'no_tenant_info', 'other']
+
+  - name: dim_parking_space
+    description: "Parking and garage price list by building."
+    columns:
+      - name: parking_space_id
+        data_tests: [unique, not_null]
+
+  - name: dim_date
+    description: "One row per calendar day."
+    columns:
+      - name: date_day
+        data_tests: [unique, not_null]
+
+  - name: dim_staff
+    description: "One row per staff member."
+    columns:
+      - name: staff_id
+        data_tests: [unique, not_null]
+      - name: staff_name
+        data_tests: [unique]

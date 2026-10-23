@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_rmb_receipt
+    description: "One row per RMB rent payment received."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: rmb_amount
+        data_tests: [not_null]
+      - name: receipt_date
+        data_tests: [not_null]
+
+  - name: stg_bank_ledger_coverage
+    description: "One row per date range of one money account that was entered into the books."
+    columns:
+      - name: account
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['company_card', 'sole_card', 'rmb', 'office_cash']
+      - name: period_start
+        data_tests: [not_null]
+      - name: period_end
+        data_tests: [not_null]
+
+  - name: stg_rent_cash_receipt
+    description: "One row per cash rent payment from the structured month blocks."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: cash_amount
+        data_tests: [not_null]

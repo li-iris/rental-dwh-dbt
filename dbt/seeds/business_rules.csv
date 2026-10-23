@@ -1,0 +1,10 @@
+rule_id,value,unit,applies_to,description,decided_by,basis
+water_invoice_due_days,30,days,fact_water_bill,"Tenant invoice should go out within this many days after the agency pays the water bill",agency default,"Internal target. NSW only allows charging a tenant if the agent asks within 3 months of the bill being issued (nsw.gov.au water rules), so 30 days leaves a safety margin"
+water_invoice_legal_limit_days,90,days,fact_water_bill,"After this many days a water bill may no longer be chargeable to the tenant (flagged as may_be_unrecoverable)",NSW law,"NSW: request payment within 3 months of the bill being issued; the bill-issue date is not in the lists, so the date the agency paid is used"
+water_payment_due_days,21,days,fact_water_bill,"Tenant should pay within this many days after the invoice is sent",NSW law,"NSW: the tenant must be given at least 21 days to pay a water usage charge"
+whole_unit_rent_over,600,AUD per week,fact_rent_roll_month,"A weekly rent above this is the whole unit; at or below is one room",owner,"Confirmed by the owner"
+turnover_due_soon_days,7,days,fact_turnover_step,"A step is due soon when its deadline is within this many days",agency default,"One week of warning is the usual horizon for a small agency"
+routine_inspection_max_per_year,4,per year,fact_inspection_notice,"A property should not have more routine inspections than this in 12 months",NSW law,"NSW residential tenancy rules allow routine inspections up to 4 times a year"
+routine_inspection_notice_days,7,days,fact_inspection_notice,"Tenant should be told at least this many days before a routine inspection",NSW law,"NSW: 7 days written notice for routine inspections"
+lease_expiry_warning_days,60,days,report,"Leases ending within this many days are listed for renewal",agency default,"NSW needs 60 days notice of a rent increase on renewal, so renewals are planned about two months ahead"
+rent_arrears_notice_days,14,days,reference,"Reference only: rent must be this many days overdue before a termination notice can be given in NSW",NSW law,"NSW: 14 days overdue, then at least 14 days notice. Not computed yet because it needs weekly rent due dates"

@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: fact_rmb_receipt
+    description: "One row per RMB rent payment received."
+    columns:
+      - name: rmb_receipt_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: fact_rent_account_check
+    description: "One row per rent account check (property x check round)."
+    columns:
+      - name: account_check_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+      - name: check_round
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3]
+                quote: false
+      - name: result_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['ok', 'issue']
+
+  - name: fact_bank_ledger_coverage
+    description: "One row per date range of one money account entered into the books."
+    columns:
+      - name: coverage_id
+        data_tests: [unique, not_null]
+      - name: account
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['company_card', 'sole_card', 'rmb', 'office_cash']
+
+  - name: fact_rent_cash_receipt
+    description: "One row per cash rent payment: collected, handed in, banked."
+    columns:
+      - name: cash_receipt_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id

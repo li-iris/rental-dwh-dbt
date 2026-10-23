@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: dim_turnover_step
+    description: "One row per step of the move-in / move-out checklist, with its deadline rule (from the seed turnover_step_catalog)."
+    columns:
+      - name: step_code
+        data_tests: [unique, not_null]
+      - name: step_order
+        data_tests: [unique, not_null]
+
+  - name: fact_turnover_case
+    description: "One row per room turnover (old tenant leaves, new tenant maybe arrives)."
+    columns:
+      - name: case_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: fact_turnover_step
+    description: "One row per turnover case x checklist step, including steps nobody recorded, with deadline and status."
+    columns:
+      - name: case_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fact_turnover_case')
+                field: case_id
+      - name: step_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_turnover_step')
+                field: step_code
+      - name: status
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['done', 'done_late', 'overdue_not_done', 'due_soon', 'upcoming', 'no_deadline', 'not_applicable']
+
+  - name: rpt_turnover_open_items
+    description: "Applicable steps that are overdue or due within 7 days of the report date."

@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: entry
+    description: "Rows typed directly into Navicat (schema entry). dbt only reads them."
+    schema: entry
+    tables:
+      - name: property
+      - name: tenancy
+      - name: rent_payment
+      - name: water_bill
+      - name: utility_bill
+      - name: inspection_notice
+      - name: special_term
+      - name: parking_lease
+      - name: moving_job
+      - name: moving_job_item

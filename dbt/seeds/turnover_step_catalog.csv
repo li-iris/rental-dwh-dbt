@@ -1,0 +1,6 @@
+step_code,step_name,stage,anchor,due_offset_days,before_next_move_in,rule_source,column_letter
+s_listing,Listing posted,listing,move_out,-14,false,fixture,M
+s_cleaning,Cleaning booked,move_out,move_out,3,true,fixture,N
+s_keys,Keys returned,move_out,move_out,0,false,fixture,O
+s_bond,Bond claim lodged,move_out,lease_end,14,false,fixture,P
+s_inspection,Move-in inspection,move_in,move_in,7,false,fixture,Q

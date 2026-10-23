@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: bronze
+    schema: bronze
+    tables:
+      - name: rent_credit
+      - name: rent_reconciliation
+      - name: rmb_receipts
+      - name: profit_monthly
+      - name: tenant_list
+      - name: tenancy_lifecycle
+      - name: bank_ledger_coverage
+      - name: rent_cash
+      - name: rent_review
+      - name: rental_application
+      - name: contract_transfer
+      - name: special_terms
+      - name: inspection_notice
+      - name: utility_bill
+      - name: water_bill
+      - name: moving_jobs
+      - name: property_items
+      - name: garage_parking

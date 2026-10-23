@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_tenancy
+    description: "One row per tenant per lease period (no contact details)."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: tenant_name
+        data_tests: [not_null]
+      - name: property_key
+        data_tests: [not_null]
+      - name: rent_pattern
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['plain', 'unchanged', 'rent_change', 'negotiable_range', 'tenant_share', 'missing', 'other']

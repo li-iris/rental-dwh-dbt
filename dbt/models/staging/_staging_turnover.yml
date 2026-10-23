@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_turnover_case
+    description: "One row per room turnover (move-out and move-in tracking row)."
+    columns:
+      - name: case_id
+        data_tests: [unique, not_null]
+      - name: property_key
+        data_tests: [not_null]
+      - name: turnover_section
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['move_out_new_tenant_found', 'sublet', 'long_term_to_short_term', 'move_out_not_relisted', 'relisting_short_term', 'awaiting_long_term_tenant']
+
+  - name: stg_turnover_step_entry
+    description: "One row per filled-in step cell of a turnover."
+    columns:
+      - name: case_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_turnover_case')
+                field: case_id
+      - name: step_code
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('turnover_step_catalog')
+                field: step_code

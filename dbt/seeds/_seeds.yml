@@ -1,0 +1,12 @@
+version: 2
+
+seeds:
+  - name: source_snapshot_order
+    config:
+      column_types:
+        as_of_date: date
+  - name: turnover_step_catalog
+    config:
+      column_types:
+        due_offset_days: integer
+        before_next_move_in: boolean

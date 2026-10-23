@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_property_profile
+    description: "One row per property from the sheet Profit (a property information sheet)."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+
+  - name: stg_property_room_profile
+    description: "One row per living space of a property (living room, master room, room 2-5)."
+    columns:
+      - name: space_code
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['living_room', 'master_room', 'room2', 'room3', 'room4', 'room5']
+
+  - name: stg_property_item
+    description: "Items bought for properties, one row per item per workbook version."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: item_name
+        data_tests: [not_null]
+
+  - name: stg_parking_lease
+    description: "Parking spaces and garages with the contract status written beside them."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: space_kind
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['garage', 'parking_space']
+      - name: lease_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['expired', 'dated', 'no_tenant_info', 'other']
+      - name: source_list
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['parking_list', 'garage_list', 'no_tenant_list']
+
+  - name: stg_parking_space
+    description: "Price list of parking spaces and garages by building."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: price
+        data_tests: [not_null]

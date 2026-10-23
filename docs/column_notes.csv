@@ -1,0 +1,180 @@
+column_name,meaning,meaning_zh
+property_id,"Key of the property (md5 of property_key). Joins every table to dim_property.","房产编号,所有表通过它连到 dim_property"
+property_key,"Readable property key built from the address: [unit/]street number + street name.","由地址生成的房产标识:[单元号/]门牌号 街名"
+address_raw,"The address exactly as written in the source.","来源里原样写的地址"
+address,"Address picked from entry.property.","从地址总表里选的地址"
+source_file,"Which workbook (or 'entry') the row came from.","这行来自哪个Excel文件(或 entry 表示手工录入)"
+tenancy_id,"Key of the lease row.","租约编号"
+tenant_name,"Tenant name as written.","租客姓名"
+is_principal_tenant,"True if marked as the principal tenant.","是否主租客"
+lease_type,"whole_unit, room_share, studio, short_term, sublet or unspecified.","租赁类型:整租/分租/studio/短租/转租/未说明"
+lease_start,"First day of the lease.","租约开始日"
+lease_end,"Last day of the lease.","租约结束日"
+weekly_rent,"Rent per week in AUD.","每周租金(澳元)"
+unit_weekly_rent,"Weekly rent written on the lease row (one room or the whole unit, see rent_class rule).","租约上写的每周租金(单房或整套,见规则)"
+visa_expiry_date,"Visa expiry date if written.","签证到期日"
+is_rented_by_room,"True if the property is let room by room.","是否按房间出租"
+amount,"Amount in AUD.","金额(澳元)"
+period_start,"First day of the billing period.","账单期开始日"
+period_end,"Last day of the billing period.","账单期结束日"
+period_text,"Billing period as written.","账单期原文"
+company_paid_date,"Day the agency paid the supplier.","公司付给供应商的日期"
+invoice_sent_date,"Day the invoice went to the tenant.","发票发给租客的日期"
+invoice_sent_by,"Staff member who sent the invoice.","发出发票的员工"
+tenant_paid_date,"Day the tenant paid.","租客付款日"
+settled_in_exit_report,"True if the amount was settled in the exit report.","是否在退房报告里结清"
+follow_up_status,"Where the bill stands today: closed, awaiting_payment, invoice_overdue, payment_overdue ...","当前跟进状态:已结清/等待付款/发票逾期/付款逾期等"
+days_past_due,"Days after the allowed deadline (rules water_invoice_due_days / water_payment_due_days).","超过规定期限的天数"
+may_be_unrecoverable,"True if the 3-month NSW window for charging the tenant has passed with no invoice.","是否已超过新州 3 个月可向租客收费的期限"
+report_date,"The day all overdue/expiry judgements are made against (default: the day dbt runs).","所有逾期/到期判断所依据的日期(默认是运行当天)"
+month_start,"First day of the month.","月份第一天"
+rent_basis,"How the expected rent was worked out: unit_rent, room_rent, room_rents_estimated, unclear ...","应收租金的算法:整套/单房/多房估算/不清楚等"
+expected_rent_aud,"Expected rent for the month using only clear days.","当月应收租金(只算明确的日子)"
+expected_rent_with_rules_aud,"Expected rent including the default rules for unclear cases.","当月应收租金(含默认规则估算)"
+cash_received_aud,"Cash recorded as received in the month.","当月记录的现金收款"
+rmb_received_aud,"RMB receipts converted to AUD.","当月记录的人民币收款(折算澳元)"
+typed_received_aud,"Payments typed into entry.rent_payment.","手工录入的收款"
+total_recorded_aud,"All recorded receipts for the month.","当月全部记录的收款"
+recorded_minus_expected_aud,"Recorded minus expected; negative = less than expected.","已记录减应收,负数表示少收"
+vacancy_credit_aud,"Rent credit for vacant days.","空置抵扣金额"
+notice_type,"routine, fire or other.","类型:例行/消防/其他"
+notice_date,"Day of the inspection.","检查日期"
+notice_given_date,"Day the tenant was told.","通知租客的日期"
+notice_sent,"True if the notice is recorded as sent.","是否已发通知"
+is_completed,"True if recorded as completed.","是否已完成"
+contract_end_date,"End date of a contract.","合同结束日"
+contract_status,"active, expired, expired_by_date or no_tenant_info.","合同状态:有效/已到期/按日期到期/无租客信息"
+job_date,"Day of the moving job.","搬家日期"
+case_id,"Key of a move-out/move-in or paperwork case.","案例编号"
+step_code,"Key of a checklist step.","步骤编号"
+step_name,"Name of the checklist step.","步骤名称"
+due_date,"Deadline of the step.","该步骤的截止日期"
+is_done,"True if the step is done.","是否已完成"
+status,"Status of the step: done, overdue_not_done, due_soon ...","步骤状态:已做/逾期未做/快到期等"
+decided_by,"Who decided the rule: owner, agency default or NSW law.","规则由谁决定:老板/公司默认/新州法规"
+basis,"Why the rule has this value.","规则依据"
+value,"The rule's number.","规则数值"
+actual_move_out_date,Day the tenant actually moved out.,实际搬出日
+address_standard,Address rewritten to the standard form used to match properties.,整理成标准写法的地址(用来匹配房产)
+alias,A spelling of a staff name found in the sheets.,员工名字在表格里出现的一种写法
+amount_text,Amount cell as written (may include notes).,金额原文(可能带备注)
+anchor,"Date the deadline counts from: move_in, move_out or lease_end.",截止日期的起算点:入住/搬出/合同到期
+anchor_date,Date the case deadlines count from.,案例截止日期的起算日
+applies_to,Table or report the rule is used in.,规则用在哪张表或报表
+attended_by,Staff member who attended.,到场的员工
+aud_amount,Amount in AUD.,澳元金额
+bank_gap_days,Days between handing in the cash and banking it.,现金交接后到存银行的天数
+banked_by,Staff member who banked the cash.,存银行的员工
+banked_date,Day the cash was banked.,存银行的日期
+bedrooms,Number of bedrooms.,卧室数
+bedrooms_first,First bedroom count written in the rooms text.,房间描述里写的第一个卧室数
+before_next_move_in,True if the step must be finished before the next tenant moves in.,是否必须在下一位租客入住前完成
+bill_type,"electricity, gas or electricity_and_gas.",账单类型:电/煤气/电和煤气
+bill_type_raw,Bill type as written.,账单类型原文
+case_type,Kind of paperwork case.,手续案例类型
+cash_amount,Cash amount collected.,收到的现金金额
+category,Kind of inspection or notice as written.,检查或通知的类别原文
+check_date,Day of the account check.,账户核对日期
+checked_by,Who did the check.,核对人
+checked_text,Check note as written.,核对备注原文
+collected_by,Staff member who collected the cash.,收现金的员工
+collected_date,Day the cash was collected.,收现金的日期
+company_paid_text,Company payment cell as written.,公司付款单元格原文
+completion_text,"How the inspection/notice was completed, as written.",完成情况原文
+condition,Condition of the item.,物品状况
+crew_text,Moving crew as written.,搬家人员原文
+date_is_complete,True if the date has a year.,日期是否带年份
+date_raw,Date as written.,日期原文
+dates_written_reversed,True if the lease end is written before the start.,合同起止日期是否写反
+days_apart,Days between two dates being compared.,所比较的两个日期相差天数
+days_late,Days after the deadline.,超过截止日的天数
+days_rent_unclear,Days of the month for which the rent could not be worked out.,当月算不出租金的天数
+days_with_tenancy,Days of the month covered by a lease.,当月有租约覆盖的天数
+done_by,Staff member who did the step.,办理该步骤的员工
+due_offset_days,Days from the anchor date to the deadline.,从起算日到截止日的天数
+end_text,End time as written.,结束时间原文
+follow_up_by,Staff member responsible for following up.,负责跟进的员工
+has_item_counts,True if item counts are recorded for the job.,是否记录了物品数量
+has_next_tenant,True if a next tenant is known.,是否已有下一位租客
+has_recorded_payment,True if any payment or credit is recorded for the month.,当月是否有收款或抵扣记录
+has_status,True if the clause has a status.,条款是否有落实情况
+has_water_bill_copy,True if a copy of the water bill is on file.,是否有水费账单副本
+in_reconciliation,True if the property is in the monthly reconciliation sheet.,是否在每月入账核对表里
+invoice_sent,True if an invoice is recorded.,是否已记录发票
+invoice_status,"invoice_sent, invoice_not_sent or settled_in_exit_report.",发票状态:已发/未发/退房报告结清
+invoice_text,Invoice cell as written.,发票单元格原文
+is_applicable,True if the step applies to this case.,该步骤是否适用于此案例
+is_cancelled,True if the case was cancelled.,案例是否已取消
+is_missing,True if nothing is recorded for the step.,该步骤是否没有任何记录
+is_not_set_up,True if the account is on the list but not set up.,是否在清单上但尚未开通
+is_recorded,True if something is recorded for the step.,该步骤是否有记录
+is_weekend,True for Saturday and Sunday.,是否周末
+item_code,"Short code of the item type, e.g. fridge.","物品类型代码,如 fridge"
+item_name_as_written,Item name as written in the sheet.,物品名称原文
+kind,Kind of step.,步骤类别
+lease_status,"dated, expired or no_tenant_info.",合同状态:有日期/已过期/无租客信息
+master_address_raw,The address as written in the reconciliation sheet (preferred) or the first sheet that mentions it.,核对表里的地址原文(没有则取第一个提到的)
+method,"bank_transfer, cash, rmb_transfer or other.",付款方式:银行转账/现金/人民币转账/其他
+month_end,Last day of the month.,月份最后一天
+move_in_date,Day the tenant moves in.,入住日期
+move_out_date,Day the tenant moves out.,搬出日期
+move_out_date_used,"Move-out date used for deadlines (actual, else the contract end).","用于算截止日的搬出日(实际日,没有则用合同到期日)"
+moving_job_id,Key of the moving job.,搬家任务编号
+new_move_in_date,Move-in date of the next tenant.,下一位租客的入住日
+new_rent,New weekly rent.,新租金(每周)
+note,Free-text note.,备注
+notes,Free-text note.,备注
+note_text,Free-text note.,备注
+notice_id,Key of the inspection/notice row.,查房/通知编号
+old_contract_end_date,End date of the previous contract.,上一份合同的到期日
+old_rent,Previous weekly rent.,原租金(每周)
+paid_date,Day the money was received.,收款日期
+paid_month,First day of the month of paid_date.,收款所在月份的第一天
+payment_check_date,Day the payment was checked.,核对付款的日期
+payment_check_text,Payment check note as written.,核对付款备注原文
+problem_text,Problems noted for the job.,搬家中遇到的问题
+quantity,How many.,数量
+raw_text,Cell text as written.,单元格原文
+received_by,Staff member who received the money.,收款的员工
+recorded_by,Staff member who recorded it.,记录人
+recorded_date,Day it was recorded.,记录日期
+recorded_text,Record cell as written.,记录单元格原文
+rent_month,Month the rent is for.,租金所属月份
+rent_payment_id,Key of the typed rent payment.,录入的租金收款编号
+rent_pattern,"How the rent was written: single, tenant_share, rent_change or negotiable_range.",租金的写法:单一/租客分摊/涨租/区间
+rent_rules_applied,Which default rules were used to fill in an unclear rent.,算不清的租金用了哪些默认规则
+room_label,Room name within a property.,房间名称
+rooms_text,Room description as written.,房间描述原文
+sent_by,Staff member who sent it.,发送人
+snapshot_count,In how many workbook versions the lease appears.,该租约出现在几个Excel版本里
+snapshot_rank,Rank of the workbook version the row came from (higher = newer).,该行来自的文件版本排名(越大越新)
+source_list,Which list in the sheet the row came from.,该行来自表里哪一个清单
+space_kind,parking_space or garage.,车位或车库
+space_label,"Name of the space, e.g. P12.",车位名称
+stage,"Stage of the checklist: listing, move_out, move_in ...",清单阶段:招租/搬出/入住等
+stairs_text,"Stairs at the property, as written.",楼梯情况原文
+staff_name,Staff member's name.,员工姓名
+start_text,Start time as written.,开始时间原文
+status_text,"How the clause was carried out, as written.",条款落实情况原文
+step_date,Day the step was done.,步骤完成日期
+step_order,Position of the step in the checklist.,步骤在清单中的顺序
+street_name,Street name.,街名
+street_number,Street number.,门牌号
+tenant_paid_text,Tenant payment cell as written.,租客付款单元格原文
+tenant_payment_recorded,True if a tenant payment is recorded.,是否有租客付款记录
+tenant_weekly_share,The tenant's share of the weekly rent.,租客分摊的每周租金
+term_text,Text of the special clause.,特别条款内容
+time_text,Time as written.,时间原文
+turnover_section,Which section of the move-out sheet the case sits in.,案例在搬出表的哪一部分
+unclear_reason,"Why the rent is unclear: rent_missing, unit_and_room_rents_mixed, different_unit_rents.",租金不清楚的原因
+unit_number,Unit number.,单元号
+updated_at,When the row was last changed.,最后修改时间
+created_at,When the row was created.,创建时间
+year_was_inferred,True if the year was inferred by a rule.,年份是否由规则推断
+work_hours,Hours worked.,工作小时数
+work_hours_total,Total hours worked.,总工作小时数
+work_time_text,Working time as written.,工作时间原文
+account,Bank account the ledger belongs to.,台账所属银行账户
+days_written,Days as written in the ledger.,台账里写的天数
+days_counted,Days counted from the dates.,按日期算出的天数
+gap_days_before,Days between this period and the previous one.,与上一时间段之间的空档天数

@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_rent_credit
+    description: "Cleaned rent credits given to tenants for vacant rooms."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: weekly_rent
+        data_tests: [not_null]
+      - name: days
+        data_tests: [not_null]
+      - name: start_date
+        data_tests: [not_null]
+      - name: end_date
+        data_tests: [not_null]
+      - name: credit_amount
+        data_tests: [not_null]
+
+  - name: stg_rent_reconciliation_check
+    description: "One row per reconciliation check (unpivoted from 3 repeated column groups)."
+    columns:
+      - name: address_raw
+        data_tests: [not_null]
+      - name: check_round
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [1, 2, 3]

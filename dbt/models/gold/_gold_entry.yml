@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: dim_business_rule
+    description: "The business rules in force (numbers, who decided them, why)."
+    columns:
+      - name: rule_id
+        data_tests: [unique, not_null]
+
+  - name: fact_rent_payment
+    description: "Rent payments typed into entry.rent_payment. A refund is negative."
+    columns:
+      - name: rent_payment_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: rpt_rent_received_month
+    description: "Expected rent next to everything recorded as received, per property and month."
+    columns:
+      - name: property_id
+        data_tests: [not_null]

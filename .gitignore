@@ -1,0 +1,15 @@
+raw_private/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+dbt/target/
+dbt/logs/
+reports/
+backups/
+logs/
+config/
+sql/*_zh.sql
+*.dump
+docs_site/
+.venv/

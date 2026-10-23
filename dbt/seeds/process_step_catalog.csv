@@ -1,0 +1,44 @@
+process,column_letter,step_code,step_name,kind
+rental_application,D,application_complete_and_clear,Application form complete and clear,step
+rental_application,E,bad_record_check_done,Tenant database checked for bad records,step
+rental_application,F,term_and_rent_checked,Lease term and rent checked,step
+rental_application,H,emergency_contact_checked,Emergency contact checked,step
+rental_application,I,approval_letter_issued,Booking approval letter issued,step
+rental_application,J,booking_deposit_checked,Booking deposit payment checked,step
+rental_application,K,principal_tenant_confirmed,Principal tenant confirmed by email,step
+rental_application,M,contract_sent_docusign,Contract sent by DocuSign,step
+rental_application,N,bond_link_sent,Bond link sent,step
+rental_application,O,confirmation_letter_prepared,Confirmation letter prepared,step
+rental_application,P,confirmation_letter_sent,Confirmation letter sent,step
+rental_application,Q,wechat_group_notified,Tenant group notified on WeChat,step
+rental_application,R,contract_signed_and_backed_up,Contract signed and backed up,step
+rental_application,S,bond_paid_and_finalised,Bond paid and finalised,step
+rental_application,T,move_in_prompt_sent,Move-in preparation prompt sent,step
+rental_application,U,appendix_sent_to_group,Appendix sent to the group,step
+rental_application,V,first_rent_notice_sent,Rent due at move-in notice sent,step
+rent_review,J,first_renewal_notice_sent,First renewal notice sent (email and WeChat),step
+rent_review,K,first_follow_up_done,First follow-up done,step
+rent_review,L,second_renewal_notice_sent,Second renewal notice sent,step
+rent_review,M,renewal_decision_recorded,Renewal decision recorded,decision
+rent_review,N,added_to_move_out_sheet,Added to the move-out sheet,step
+rent_review,O,added_to_listing_sheet,Added to the listing sheet,step
+rent_review,P,move_out_notice_sent,Move-out notice sent,step
+rent_review,Q,added_to_paperwork_sheet,Added to the paperwork sheet,step
+rent_review,R,renewal_contract_signed,Renewal contract signed,step
+rent_review,S,propertyme_and_excel_updated,PropertyMe and Excel updated,step
+contract_transfer,D,transfer_guidance_sent,Sublet guidance sent (email and WeChat),step
+contract_transfer,I,fee_invoice_created,Handling-fee invoice created,step
+contract_transfer,J,handling_fee_paid,Handling fee paid,step
+contract_transfer,K,handling_fee_arrival_checked,Handling-fee arrival checked,step
+contract_transfer,L,paperwork_done,"Booking, contract and bond paperwork done",step
+contract_transfer,M,handling_fee_checked_by,Handling fee checked,step
+contract_transfer,N,booking_deposit_received,Booking deposit received,step
+contract_transfer,O,booking_deposit_arrival_checked,Booking deposit arrival checked,step
+contract_transfer,P,contract_signed,Contract signed,step
+contract_transfer,Q,bond_paid,Bond paid,step
+contract_transfer,R,rent_paid,Rent paid,step
+contract_transfer,S,new_tenant_moved_in_and_report_done,New tenant moved in and condition report done,step
+contract_transfer,T,handover_cleaning_damage_notice_sent,Handover cleaning and damage notice sent,step
+contract_transfer,V,old_tenant_move_out_and_bond_refund,Old tenant move-out and bond refund done,step
+contract_transfer,W,records_removed,Records removed,step
+contract_transfer,X,old_tenant_left_group,Old tenant removed from the group,step

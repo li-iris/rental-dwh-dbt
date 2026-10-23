@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_process_case
+    description: "One row per case in the three paperwork checklists (new tenant, renewal, contract transfer)."
+    columns:
+      - name: case_id
+        data_tests: [unique, not_null]
+      - name: process
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['rental_application', 'rent_review', 'contract_transfer']
+
+  - name: stg_process_step_entry
+    description: "One row per step cell with something written in it. Empty cells have no row here."
+    columns:
+      - name: case_id
+        data_tests: [not_null]
+      - name: step_code
+        data_tests: [not_null]
+      - name: entry_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['dated', 'yes', 'no', 'text_done', 'name_only', 'text_only', 'not_applicable']
+
+  - name: stg_inspection_notice
+    description: "One row per routine inspection, fire inspection or other notice."
+    columns:
+      - name: notice_id
+        data_tests: [unique, not_null]
+      - name: notice_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['routine', 'fire', 'other']
+
+  - name: stg_special_term
+    description: "One row per special clause agreed with a tenant."
+    columns:
+      - name: special_term_id
+        data_tests: [unique, not_null]

@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: fact_water_bill
+    description: "One row per water bill, with whether an invoice was sent and whether the tenant paid."
+    columns:
+      - name: water_bill_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+      - name: invoice_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['invoice_sent', 'invoice_not_sent', 'settled_in_exit_report']
+
+  - name: fact_utility_bill
+    description: "One row per electricity / gas bill line; is_not_set_up marks bills with nothing recorded yet."
+    columns:
+      - name: utility_bill_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: fact_moving_job
+    description: "One row per moving job. job_date is filled only when the sheet gives a full date."
+    columns:
+      - name: moving_job_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: fact_moving_job_item
+    description: "One row per (moving job, item type) with a recorded count; 0 means checked and none."
+    columns:
+      - name: moving_job_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fact_moving_job')
+                field: moving_job_id
+      - name: quantity
+        data_tests: [not_null]

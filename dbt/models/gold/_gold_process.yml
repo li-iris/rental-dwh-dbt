@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: dim_process_step
+    description: "One row per step of each paperwork checklist, in sheet order."
+    columns:
+      - name: step_code
+        data_tests: [not_null]
+
+  - name: fact_process_case
+    description: "One row per paperwork case, duplicates between workbook versions removed."
+    columns:
+      - name: case_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: fact_process_step
+    description: "Full grid of case x step. A step nobody recorded has is_missing = true instead of being absent."
+    columns:
+      - name: case_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fact_process_case')
+                field: case_id
+      - name: entry_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['dated', 'yes', 'no', 'text_done', 'name_only', 'text_only', 'not_applicable', 'no_record']
+
+  - name: fact_inspection_notice
+    description: "One row per inspection or notice (routine, fire, other)."
+    columns:
+      - name: notice_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id
+
+  - name: fact_special_term
+    description: "One row per special clause and whether anyone recorded it being carried out."
+    columns:
+      - name: special_term_id
+        data_tests: [unique, not_null]
+      - name: property_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_property')
+                field: property_id

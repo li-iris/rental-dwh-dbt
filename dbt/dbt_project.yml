@@ -1,0 +1,15 @@
+name: 'rental_dwh'
+version: '1.0.0'
+profile: 'rental_dwh'
+model-paths: ["models"]
+
+flags:
+  manage_state: false
+
+models:
+  rental_dwh:
+    staging:
+      +materialized: view
+    gold:
+      +schema: gold
+      +materialized: table
