@@ -16,7 +16,7 @@ Direct entry (Navicat/psql) -> entry schema -----^                              
 
 ```bash
 docker compose up --build        # Postgres + the whole pipeline on invented data
-# or, with Python 3.12 and a local Postgres:
+# or, with Python 3.10 and a local Postgres:
 pip install -r requirements.txt
 export DBT_PROFILES_DIR=$PWD/dbt PGDATABASE=rental_dwh
 make demo                        # invent data -> load -> dbt seed/run/test -> problem list -> history
@@ -39,7 +39,41 @@ CI (`.github/workflows/ci.yml`) does exactly this on every push and fails if any
 | Operations | one-command refresh (`run_all.sh`), run history schema, backups, least-privilege roles, launchd scheduling |
 
 Docs: [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md), [`docs/ER.md`](docs/ER.md), [`docs/BUSINESS_RULES.md`](docs/BUSINESS_RULES.md),
-[`docs/DATA_DICTIONARY.md`](docs/DATA_DICTIONARY.md), [`docs/OPERATIONS.md`](docs/OPERATIONS.md), [`docs/PORTFOLIO.md`](docs/PORTFOLIO.md).
+[`docs/DATA_DICTIONARY.md`](docs/DATA_DICTIONARY.md), [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
+
+## Tests and orchestration
+
+- `tests/` - 37 pytest unit tests for the extraction step, the loading helpers, the Excel layout guard, the dbt-summary parser and the cloud scripts (`make test`; also run in CI).
+- `airflow/rental_dwh_dag.py` - the same refresh as `run_all.sh`, split into 9 tasks. The `airflow` job in CI installs Airflow 2.10 in its own environment, checks the task order and runs the whole DAG once on the synthetic data (`airflow dags test`). It is not deployed to a long-running scheduler.
+
+## Cloud layer (Snowflake)
+
+The heavy part - cleaning the Excel sheets - stays in PostgreSQL, where it is written in SQL with regular expressions and arrays.
+The finished gold tables are then published to Snowflake, where dbt builds a few reports and checks on top:
+
+```
+PostgreSQL gold  ->  scripts/export_gold.py  ->  CSV files  ->  scripts/snowflake_load.py  ->  Snowflake RAW
+                     (refuses to run on                          (PUT + COPY INTO,              |
+                      non-synthetic data)                         row counts checked)           v
+                                                              dbt_snowflake/: 4 staging views, 3 report tables, 14 data tests
+```
+
+```bash
+PGDATABASE=demo_dwh python scripts/export_gold.py raw_private/gold_csv     # from the synthetic demo database
+source ~/.snowflake/env.sh                                                 # account, user, key path - no secret in the repo
+python scripts/snowflake_load.py raw_private/gold_csv
+cd dbt_snowflake && dbt build --target snowflake
+```
+
+Login uses a key pair (a service user with a public key), so there is no password in any file. Settings come from environment variables (`dbt/profiles.yml`, target `snowflake`).
+`scripts/s3_landing.py` uploads and downloads the CSV files to an S3 bucket (server-side encrypted); it is not part of the Snowflake path yet.
+
+| Part | How it was checked |
+|---|---|
+| Report and test SQL | run against PostgreSQL with the synthetic data, then on a Snowflake trial account: `dbt build` = 21 of 21 passed |
+| Export and load scripts | helper functions covered by pytest; the load itself was run by hand on a Snowflake trial account (4 tables, row counts matched) |
+| S3 module | pytest with a fake S3 client only; not yet run against a real AWS account |
+| Snowflake in CI | not done: it would need credentials stored as repository secrets |
 
 ## The synthetic data
 
@@ -50,5 +84,7 @@ Only 8 of the 18 sheets carry rows; the other 10 are header-only so the pipeline
 ## Honest limits
 
 - Business rules (e.g. 90-day water recovery window, 21 days to pay, up to 4 routine inspections a year) follow NSW practice as understood by the author; this is not legal advice.
-- The optional Airflow DAG in `airflow/` is a sketch and is not run in CI.
 - Bank-transaction detail and rent arrears are not modelled.
+- Only 4 gold tables are published to Snowflake and only 3 reports are built there; the Excel cleaning is not ported to Snowflake SQL.
+- `docker compose up` is provided but has not been run by the author; CI is the tested path.
+- The Snowflake and S3 parts have not been run in CI (see the table above).
