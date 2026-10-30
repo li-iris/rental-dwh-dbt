@@ -105,7 +105,7 @@ make spark                                 # after make demo: export, recompute,
 |---|---|
 | Export script and reference SQL | run on the full synthetic warehouse in the `spark` CI job; export helpers and safety checks: 6 pytest tests, passing |
 | Spark transforms, Parquet output, reconciliation | `spark` CI job (PySpark 3.5.6, local mode, Java 17, Python 3.10): `rent_received_month` 238 rows, `water_bill_month` 36 rows, `rent_received_trend` 238 rows - all match PostgreSQL row for row (0 problems); the 7 Spark unit tests pass with `REQUIRE_PYSPARK=1` |
-| Databricks | not done: no workspace was used |
+| Databricks | Databricks Free Edition (serverless): the repository cloned as a Git folder and the 7 Spark unit tests (transforms + reconciliation) run in a notebook - `7 passed`. The full PostgreSQL -> Spark run has not been done there (it needs the warehouse database) |
 
 ## The synthetic data
 
@@ -120,4 +120,4 @@ Only 8 of the 18 sheets carry rows; the other 10 are header-only so the pipeline
 - Only 4 gold tables are published to Snowflake and only 3 reports are built there; the Excel cleaning is not ported to Snowflake SQL.
 - `docker compose up` is provided but has not been run by the author; CI is the tested path.
 - The Snowflake and S3 parts have not been run in CI (see the table above).
-- The Spark layer runs in local mode in CI; it has not been run on Databricks yet (see [Spark layer](#spark-layer)).
+- The full Spark run (export from PostgreSQL, recompute, reconcile) is done in CI in local mode; on Databricks only the Spark unit tests have been run (see [Spark layer](#spark-layer)).
