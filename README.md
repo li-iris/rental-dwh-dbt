@@ -39,7 +39,7 @@ Docs: [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md), [`docs/ER.md`](docs/ER.md), [`
 
 ## Tests and orchestration
 
-- `tests/` - 37 pytest unit tests for the extraction step, the loading helpers, the Excel layout guard, the dbt-summary parser and the cloud scripts (`make test`; also run in CI).
+- `tests/` - 43 pytest unit tests for the extraction step, the loading helpers, the Excel layout guard, the dbt-summary parser, the cloud scripts and the Spark export (`make test`; also run in CI), plus 7 Spark transform tests that are skipped when pyspark is not installed (see [Spark layer](#spark-layer)).
 - `airflow/rental_dwh_dag.py` - the same refresh as `run_all.sh`, split into 9 tasks. The `airflow` job in CI installs Airflow 2.10 in its own environment, checks the task order and runs the whole DAG once on the synthetic data (`airflow dags test`). It is not deployed to a long-running scheduler.
 
 ## Cloud layer (Snowflake)
@@ -75,6 +75,38 @@ What the reports built in Snowflake look like (invented data, excerpt):
 | S3 module | pytest with a fake S3 client only; not yet run against a real AWS account |
 | Snowflake in CI | not done: it would need credentials stored as repository secrets |
 
+## Spark layer
+
+The same gold tables are also read by PySpark, which recomputes three reports and checks them against PostgreSQL:
+
+```
+PostgreSQL gold  ->  spark/export_inputs.py  ->  CSV: inputs/ (3 gold tables)        ->  spark/run_spark.py
+                     (same synthetic-only         reference/ (PostgreSQL answers)          recompute -> Parquet (partitioned by month)
+                      check as export_gold.py)                                             -> reconcile row for row, exit 1 on any mismatch
+```
+
+| Report (Spark) | How Spark builds it | PostgreSQL answer it is reconciled with |
+|---|---|---|
+| `rent_received_month` | DataFrame API: rent roll + typed payments, per property and month | the dbt table `gold.rpt_rent_received_month` |
+| `water_bill_month` | Spark SQL: bills, amount, open / overdue / possibly unrecoverable per property and billing month | `spark/reference_sql/water_bill_month.sql` on `gold.fact_water_bill` |
+| `rent_received_trend` | window functions: change against the previous calendar month, running total | `spark/reference_sql/rent_received_trend.sql` on the dbt report |
+
+Reconciliation = full outer join on the keys (an empty key matches an empty key); every key must exist on both sides, amounts must agree to the cent, other columns exactly. A reference with no rows also fails the run.
+The synthetic data has no payments typed into `entry.rent_payment`, so on it the typed-payment part of `rent_received_month` is covered only by its unit test.
+`spark/transforms.py` holds only DataFrame-in, DataFrame-out functions; paths and the session come from arguments or environment variables,
+so the runner is meant to work unchanged on Databricks (`--master` omitted, `--input`/`--output` pointing at a Volume or cloud storage).
+
+```bash
+pip install -r requirements-spark.txt      # pyspark 3.5, needs Java 17
+make spark                                 # after make demo: export, recompute, write Parquet, reconcile
+```
+
+| Part | How it was checked |
+|---|---|
+| Export script and reference SQL | run against a small hand-built PostgreSQL 16 gold schema holding the same rows as the unit-test fixtures (`rpt_rent_received_month` built from its real dbt SQL): the PostgreSQL answers equal the values the Spark tests expect. Not yet run on the full synthetic warehouse. Export helpers and safety checks: 6 pytest tests, passing |
+| Spark transforms, Parquet output, reconciliation | **not yet run.** pyspark could not be installed where this layer was written. The 7 Spark unit tests and the full run on the synthetic warehouse are in the `spark` CI job (Java 17, Python 3.10), which has not run yet |
+| Databricks | not done: no workspace was used |
+
 ## The synthetic data
 
 `scripts/gen_synthetic.py` writes two workbooks with the same sheet titles and column positions as the originals,
@@ -88,3 +120,4 @@ Only 8 of the 18 sheets carry rows; the other 10 are header-only so the pipeline
 - Only 4 gold tables are published to Snowflake and only 3 reports are built there; the Excel cleaning is not ported to Snowflake SQL.
 - `docker compose up` is provided but has not been run by the author; CI is the tested path.
 - The Snowflake and S3 parts have not been run in CI (see the table above).
+- The Spark layer has not been executed with Spark yet, and has not been run on Databricks (see [Spark layer](#spark-layer)).

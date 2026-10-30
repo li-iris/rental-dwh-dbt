@@ -14,6 +14,13 @@ refresh:
 	createdb $(DB) 2>/dev/null || true
 	SKIP_BACKUP=1 bash scripts/run_all.sh
 
+# Spark layer: export gold inputs + PostgreSQL answers, recompute three reports in local Spark, write Parquet,
+# reconcile row for row (fails on any mismatch). Needs Java 17 and: pip install -r requirements-spark.txt
+.PHONY: spark
+spark:
+	python spark/export_inputs.py raw_private/spark_csv
+	python spark/run_spark.py --master "local[*]" --input raw_private/spark_csv --output raw_private/spark_out
+
 s3-upload:
 	python scripts/s3_landing.py upload raw_private/bronze_csv
 
