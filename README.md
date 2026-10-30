@@ -39,7 +39,7 @@ Docs: [`docs/DATA_MODEL.md`](docs/DATA_MODEL.md), [`docs/ER.md`](docs/ER.md), [`
 
 ## Tests and orchestration
 
-- `tests/` - 43 pytest unit tests for the extraction step, the loading helpers, the Excel layout guard, the dbt-summary parser, the cloud scripts and the Spark export (`make test`; also run in CI), plus 7 Spark transform tests that are skipped when pyspark is not installed (see [Spark layer](#spark-layer)).
+- `tests/` - 43 pytest unit tests for the extraction step, the loading helpers, the Excel layout guard, the dbt-summary parser, the cloud scripts and the Spark export (`make test`; also run in CI), plus 7 Spark transform tests that run in the `spark` CI job and are skipped locally when pyspark is not installed (see [Spark layer](#spark-layer)).
 - `airflow/rental_dwh_dag.py` - the same refresh as `run_all.sh`, split into 9 tasks. The `airflow` job in CI installs Airflow 2.10 in its own environment, checks the task order and runs the whole DAG once on the synthetic data (`airflow dags test`). It is not deployed to a long-running scheduler.
 
 ## Cloud layer (Snowflake)
@@ -103,8 +103,8 @@ make spark                                 # after make demo: export, recompute,
 
 | Part | How it was checked |
 |---|---|
-| Export script and reference SQL | run against a small hand-built PostgreSQL 16 gold schema holding the same rows as the unit-test fixtures (`rpt_rent_received_month` built from its real dbt SQL): the PostgreSQL answers equal the values the Spark tests expect. Not yet run on the full synthetic warehouse. Export helpers and safety checks: 6 pytest tests, passing |
-| Spark transforms, Parquet output, reconciliation | **not yet run.** pyspark could not be installed where this layer was written. The 7 Spark unit tests and the full run on the synthetic warehouse are in the `spark` CI job (Java 17, Python 3.10), which has not run yet |
+| Export script and reference SQL | run on the full synthetic warehouse in the `spark` CI job; export helpers and safety checks: 6 pytest tests, passing |
+| Spark transforms, Parquet output, reconciliation | `spark` CI job (PySpark 3.5.6, local mode, Java 17, Python 3.10): `rent_received_month` 238 rows, `water_bill_month` 36 rows, `rent_received_trend` 238 rows - all match PostgreSQL row for row (0 problems); the 7 Spark unit tests pass with `REQUIRE_PYSPARK=1` |
 | Databricks | not done: no workspace was used |
 
 ## The synthetic data
@@ -120,4 +120,4 @@ Only 8 of the 18 sheets carry rows; the other 10 are header-only so the pipeline
 - Only 4 gold tables are published to Snowflake and only 3 reports are built there; the Excel cleaning is not ported to Snowflake SQL.
 - `docker compose up` is provided but has not been run by the author; CI is the tested path.
 - The Snowflake and S3 parts have not been run in CI (see the table above).
-- The Spark layer has not been executed with Spark yet, and has not been run on Databricks (see [Spark layer](#spark-layer)).
+- The Spark layer runs in local mode in CI; it has not been run on Databricks yet (see [Spark layer](#spark-layer)).
