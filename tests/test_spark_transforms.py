@@ -28,6 +28,12 @@ JUL, AUG, SEP, OCT = date(2025, 7, 1), date(2025, 8, 1), date(2025, 9, 1), date(
 
 @pytest.fixture(scope="module")
 def spark():
+    if os.environ.get("DATABRICKS_RUNTIME_VERSION"):
+        # On Databricks: use the session the workspace already provides (serverless or a cluster); never stop it.
+        s = SparkSession.builder.getOrCreate()
+        s.conf.set("spark.sql.session.timeZone", "UTC")
+        yield s
+        return
     s = (SparkSession.builder.master("local[1]").appName("rental_dwh_spark_tests")
          .config("spark.sql.shuffle.partitions", "1").config("spark.ui.enabled", "false")
          .config("spark.sql.session.timeZone", "UTC").getOrCreate())
