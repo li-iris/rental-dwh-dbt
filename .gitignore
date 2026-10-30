@@ -16,3 +16,6 @@ docs_site/
 dbt_snowflake/target/
 dbt_snowflake/logs/
 .user.yml
+spark-warehouse/
+metastore_db/
+derby.log
